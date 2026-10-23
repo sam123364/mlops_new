@@ -1,0 +1,17 @@
+# Global parameters for MLOps pipeline
+seed: 42
+
+data:
+  raw_dir: data/raw
+  processed_dir: data/processed
+
+spatial:
+  bengaluru_bounds:
+    lat_min: 12.75
+    lat_max: 13.20
+    lon_min: 77.40
+    lon_max: 77.80
+
+hydrology:
+  default_dry_year_quantile: 0.10
+  default_normal_year_quantile: 0.50
