@@ -1,0 +1,84 @@
+{
+  "type": "FeatureCollection",
+  "name": "Bengaluru_Urban_Region_Expanded_AOI",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Bengaluru Urban Region - Expanded Approximate AOI",
+        "note": "Expanded approximate polygon intended to cover the main Bengaluru urban region for IMDWeb rainfall extraction. Not an official BBMP or Bengaluru Urban district boundary. It may include nearby surrounding areas."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              77.78,
+              13.3
+            ],
+            [
+              77.78,
+              13.02
+            ],
+            [
+              77.72,
+              12.86
+            ],
+            [
+              77.62,
+              12.73
+            ],
+            [
+              77.47,
+              12.62
+            ],
+            [
+              77.3,
+              12.56
+            ],
+            [
+              77.1,
+              12.56
+            ],
+            [
+              76.92,
+              12.64
+            ],
+            [
+              76.82,
+              12.79
+            ],
+            [
+              76.8,
+              12.97
+            ],
+            [
+              76.85,
+              13.12
+            ],
+            [
+              77.0,
+              13.26
+            ],
+            [
+              77.2,
+              13.33
+            ],
+            [
+              77.43,
+              13.34
+            ],
+            [
+              77.62,
+              13.33
+            ],
+            [
+              77.78,
+              13.3
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
