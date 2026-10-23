@@ -1,0 +1,16 @@
+# Regulatory thresholds for Rainwater Harvesting in Bengaluru
+# Rule: Never hardcode in logic. Always track confidence, source, and last verified date.
+
+bwssb_rwh_mandate:
+  site_area_sqm_threshold:
+    value: 108.0  # ~1200 sq.ft
+    unit: sqm
+    source: "BWSSB (Amendment) Act"
+    confidence: "medium"
+    last_verified: "2024-01-01"
+  built_up_area_sqm_threshold:
+    value: 216.0  # ~2400 sq.ft
+    unit: sqm
+    source: "BWSSB (Amendment) Act"
+    confidence: "medium"
+    last_verified: "2024-01-01"

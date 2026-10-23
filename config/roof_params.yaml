@@ -1,0 +1,20 @@
+# Runoff coefficients and first-flush parameters
+
+runoff_coefficients:
+  concrete_roof:
+    low: 0.80
+    default: 0.85
+    high: 0.90
+    source: "Farreny et al. (2011) / CPWD RWH Guidelines"
+  metal_sheet:
+    low: 0.85
+    default: 0.90
+    high: 0.95
+    source: "Texas Manual on Rainwater Harvesting"
+
+first_flush:
+  default_depth_mm:
+    value: 1.0
+    range: [0.5, 2.0]
+    unit: mm
+    source: "Martinson & Thomas (2005)"

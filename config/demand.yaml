@@ -1,0 +1,15 @@
+# Per-capita domestic water demand references (LPCD: Litres Per Capita per Day)
+
+per_capita_demand:
+  standard_metro:
+    value: 135
+    unit: lpcd
+    source: "Bureau of Indian Standards (BIS 1172:1993)"
+    confidence: "high"
+    last_verified: "2024-01-01"
+  non_potable_only:
+    value: 45
+    unit: lpcd
+    source: "CPHEEO Manual on Water Supply"
+    confidence: "medium"
+    last_verified: "2024-01-01"
