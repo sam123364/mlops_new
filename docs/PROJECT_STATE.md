@@ -7,8 +7,8 @@
 
 ## 2. Workstream Status (Phase 1)
 - **Workstream A: Infrastructure** (Samarth): In Progress (Repo initialization & folder layout established).
-- **Workstream B: Data** (Sambhav): In Progress (Raw IMD daily & NC gridded datasets collected).
-- **Workstream C: Exploration and Features** (Samiksha): Pending setup.
+- **Workstream B: Data** (Sambhav): Done (Raw IMD daily & NC gridded datasets collected and cleaned).
+- **Workstream C: Exploration and Features** (Samiksha): In Progress (EDA executed, feature engineering module and zero-leakage tests built).
 - **Workstream D: Baselines and Evaluation** (Samith): Pending harness setup.
 
 ## 3. What is Done
@@ -19,9 +19,12 @@
 - [x] Configured baseline configs: `regulations.yaml`, `demand.yaml`, `roof_params.yaml`, and `params.yaml`.
 - [x] Cleaned daily district CSV and extracted 125-year (1901-2025) IMD NetCDF gridded timeseries to `data/processed/`.
 - [x] Executed comprehensive EDA notebook (`notebooks/01_bengaluru_rainfall_eda_cleaning.ipynb`) validating 4 hydrological hypotheses with rich plots and unit simulations.
+- [x] Built modular feature extraction script (`src/features/build_features.py`) computing harmonic calendar, antecedent memory (ADWP, rolling precipitation, volatility, Markov transitions), and spatial gradients.
+- [x] Implemented zero-leakage test suite (`tests/test_features.py`) with perturbation assertions proving no future or day-of information leaks into predictors.
+- [x] Generated engineered feature dataset `data/processed/features_bengaluru_daily.csv` (45,656 rows, 25 columns).
 
 ## 4. In Progress / Next Steps
-- [ ] Initialize DVC (`dvc init`) for data versioning.
+- [ ] Initialize DVC (`dvc init`) for tracking processed data artifacts and pipeline definition.
 - [ ] Baseline temporal models (Workstream D: long-term mean, empirical quantiles, Markov chain).
 - [ ] Spatial leave-one-gauge-out cross-validation harness.
 - [ ] Hydrology module implementation in `src/hydrology/` with pytest suite.
