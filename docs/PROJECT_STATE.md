@@ -19,9 +19,13 @@
 - [x] Configured baseline configs: `regulations.yaml`, `demand.yaml`, `roof_params.yaml`, and `params.yaml`.
 - [x] Cleaned daily district CSV and extracted 125-year (1901-2025) IMD NetCDF gridded timeseries to `data/processed/`.
 - [x] Executed comprehensive EDA notebook (`notebooks/01_bengaluru_rainfall_eda_cleaning.ipynb`) validating 4 hydrological hypotheses with rich plots and unit simulations.
-- [x] Built modular feature extraction script (`src/features/build_features.py`) computing harmonic calendar, antecedent memory (ADWP, rolling precipitation, volatility, Markov transitions), and spatial gradients.
-- [x] Implemented zero-leakage test suite (`tests/test_features.py`) with perturbation assertions proving no future or day-of information leaks into predictors.
-- [x] Generated engineered feature dataset `data/processed/features_bengaluru_daily.csv` (45,656 rows, 25 columns).
+- [x] Built modular feature extraction script (`src/features/build_features.py`) computing harmonic calendar, antecedent memory (ADWP, rolling precipitation, volatility, Markov transitions), spatial gradients, and monthly/seasonal aggregated predictors.
+- [x] Implemented comprehensive zero-leakage test suite (`tests/test_features.py`) verifying daily, monthly, and seasonal perturbation immunity.
+- [x] Generated daily, monthly, and seasonal engineered feature datasets:
+  - `data/processed/features_bengaluru_daily.csv` (45,656 rows, 25 cols)
+  - `data/processed/features_bengaluru_monthly.csv` (1,500 rows, 16 cols)
+  - `data/processed/features_bengaluru_seasonal.csv` (500 rows, 11 cols)
+- [x] Authored complete feature documentation in `docs/features.md`.
 
 ## 4. In Progress / Next Steps
 - [ ] Initialize DVC (`dvc init`) for tracking processed data artifacts and pipeline definition.
