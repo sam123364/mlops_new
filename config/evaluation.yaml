@@ -1,0 +1,34 @@
+# MLflow & DAGsHub Tracking Configuration
+
+mlflow:
+  experiment_name: "rainfall_baseline_evaluation"
+  local_tracking_uri: "mlruns"
+  # Remote DAGsHub URL template:
+  # https://dagshub.com/<username>/<repo_name>.mlflow
+  dagshub:
+    repo_owner: "sam123364"
+    repo_name: "mlops_new"
+    remote_uri_template: "https://dagshub.com/{repo_owner}/{repo_name}.mlflow"
+
+backtest:
+  min_train_years: 30
+  eval_start_year: 1950
+  eval_end_year: 2025
+  quantiles:
+    dry_year_q10: 0.10
+    normal_year_q50: 0.50
+    wet_year_q90: 0.90
+
+baseline_models:
+  - id: "B1_climatology_mean"
+    name: "Historical Climatological Mean/Median"
+    type: "non-parametric central tendency"
+  - id: "B2_empirical_quantiles"
+    name: "Historical Empirical Quantiles (P10, P50, P90)"
+    type: "non-parametric distributional"
+  - id: "B3_persistence_lag1"
+    name: "Lag-1 Autoregressive Persistence"
+    type: "autoregressive memory"
+  - id: "B4_quantile_regression"
+    name: "Linear Quantile Regression on Engineered Features"
+    type: "parametric linear quantile model"
