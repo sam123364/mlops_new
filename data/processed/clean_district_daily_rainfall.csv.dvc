@@ -1,0 +1,5 @@
+outs:
+- md5: 034547afa1c626fda5464e0d48763a09
+  size: 16381
+  hash: md5
+  path: clean_district_daily_rainfall.csv
