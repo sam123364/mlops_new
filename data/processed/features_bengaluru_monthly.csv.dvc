@@ -1,0 +1,5 @@
+outs:
+- md5: 41a006d2e55f633aed7ef7fa7f9f71a1
+  size: 307999
+  hash: md5
+  path: features_bengaluru_monthly.csv

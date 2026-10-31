@@ -37,10 +37,8 @@ venv.bak/
 .env*
 !.env.example
 
-# Large Data & Models (Normally DVC tracked, tracked here as per explicit user request)
-# data/raw/*
-# !data/raw/.gitkeep
-data/processed/*
+# Large Data & Models (DVC tracked)
+data/processed/*.csv
 !data/processed/.gitkeep
 models/*
 !models/.gitkeep
@@ -48,6 +46,8 @@ models/*
 # MLflow
 mlruns/
 .mlflow/
+mlflow.db
+mlflow.db*
 
 # IDE & OS
 .vscode/

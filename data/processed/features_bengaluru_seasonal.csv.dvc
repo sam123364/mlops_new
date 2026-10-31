@@ -1,0 +1,5 @@
+outs:
+- md5: 33510c7d08fa38cf21d197fba979680b
+  size: 65440
+  hash: md5
+  path: features_bengaluru_seasonal.csv
