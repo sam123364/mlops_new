@@ -1,0 +1,5 @@
+outs:
+- md5: fb407baa76a7e6746e589f4e6f34b2eb
+  size: 7795496
+  hash: md5
+  path: rainfall_districtwise_daily_imd.csv

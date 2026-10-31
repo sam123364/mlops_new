@@ -1,0 +1,5 @@
+outs:
+- md5: fb247e440a2a5dd964c4a08d611c947e
+  size: 1695
+  hash: md5
+  path: bengaluru_full_urban_region_imdweb.geojson

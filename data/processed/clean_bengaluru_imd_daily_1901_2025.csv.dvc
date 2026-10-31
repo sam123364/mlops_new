@@ -1,0 +1,5 @@
+outs:
+- md5: 5e2fe774d705ad8a6c91e1b78e54f8f0
+  size: 3239781
+  hash: md5
+  path: clean_bengaluru_imd_daily_1901_2025.csv
