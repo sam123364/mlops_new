@@ -28,7 +28,12 @@
 - [x] Integrated MLflow tracking (`sqlite:///mlflow.db`) logging parameters, Pinball losses, MAE, coverage intervals, and artifacts.
 - [x] Executed evaluation notebook (`notebooks/02_baseline_models_and_evaluation.ipynb`) rendering comparison tables and time-series envelope charts.
 - [x] Authored baseline architecture and DAGsHub remote sync guide in `docs/baseline_models.md`.
-- [x] Unit test suite (`tests/test_baselines.py`) - all 8 unit tests passed.
+- [x] Implemented Model Registry and automated Promotion Pipeline (`src/models/register_model.py`) supporting local SQLite and DAGsHub remote tracking.
+- [x] Configured automated model promotion gate: stage transition from `None` -> `Staging`, and `Production` promotion checking MAE < 35 mm and 80% coverage >= 75%.
+- [x] Tagged models with governance metadata (`git_commit`, `dvc_data_version`, `author`, `target_quantiles`, `methodology`).
+- [x] Added unit tests for model registration and promotion gate (`tests/test_register_model.py`) - all 3 passed.
+- [x] Created GitHub Actions CI/CD pipeline (`.github/workflows/model_registry_ci.yml`) verifying dependencies and running test suite on PRs.
+- [x] Documented model registry best practices, lineage, and DAGsHub inspection guide in `docs/model_registry_guide.md`.
 
 ## 4. In Progress / Next Steps
 - [ ] Configure DAGsHub remote credentials for remote DVC push and web MLflow sync.
