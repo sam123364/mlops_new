@@ -135,9 +135,20 @@ class QuantileRegressionBaseline:
         return self
 
     def predict_all_quantiles(self, X_test: pd.DataFrame) -> Dict[float, np.ndarray]:
-        predictions = {}
+        raw_predictions = {}
         for q, model in self.models_.items():
             preds = model.predict(X_test)
             # Physical hydrology constraint: rainfall cannot be negative
-            predictions[q] = np.maximum(0.0, preds)
+            raw_predictions[q] = np.maximum(0.0, preds)
+
+        # Monotonic sorting to eliminate quantile crossings
+        # (Standard post-processing for independent linear quantile models)
+        q_keys = sorted(self.quantiles)
+        stacked = np.column_stack([raw_predictions[q] for q in q_keys])
+        sorted_stacked = np.sort(stacked, axis=1)
+
+        predictions = {}
+        for idx, q in enumerate(q_keys):
+            predictions[q] = sorted_stacked[:, idx]
+
         return predictions
