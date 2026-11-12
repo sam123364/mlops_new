@@ -15,7 +15,7 @@ Update `docs/PROJECT_STATE.md`: done, in progress, blocked, next steps, open que
 - Goal: for a Bengaluru building, estimate harvestable rooftop rainwater (normal year and dry year), recommend tank or recharge size, and report how much demand it offsets, with uncertainty.
 - ML parts: (1) probabilistic rainfall scenarios from the long IMD record; (2) spatial adjustment of rainfall using KSNDMC gauges, validated by leave-one-gauge-out.
 - Deterministic parts: roof yield, daily water balance, tank sizing, compliance checklist.
-- Phase 1 only: dataset acquisition, EDA, features, baselines, Git, DVC, MLflow, initial evaluation. Do not build the UI or serving layer yet.
+- Phase 1 only: dataset acquisition, EDA, features, baselines, Git, DVC, MLflow, initial evaluation. Do not build the UI yet. Exception: the FastAPI inference service (`src/serving/`, see `docs/serving.md`) was brought forward on 2026-11-13 (Workstream A).
 
 ## Decisions that are fixed (ask before changing)
 - Rainfall is the ML component. Report distributions (quantiles), not a single forecast.
