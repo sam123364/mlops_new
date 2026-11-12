@@ -1,0 +1,6 @@
+outs:
+- md5: 45dfb0e1f5c83612b70940f6eec4d62f.dir
+  size: 28223
+  nfiles: 2
+  hash: md5
+  path: climate_indices
