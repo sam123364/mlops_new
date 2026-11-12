@@ -35,4 +35,4 @@ jobs:
 
       - name: Verify Model Registration CLI Pipeline
         run: |
-          python -m src.models.register_model --promote --tracking-uri sqlite:///ci_test_mlflow.db
+          python -m src.models.register_model --promote --tracking-uri sqlite:///ci_test_mlflow.db --metrics-file reports/baseline_metrics.json
