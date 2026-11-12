@@ -1,0 +1,372 @@
+{
+  "target": "monthly_rain_mm per IMD 0.25 degree cell",
+  "n_cells": 18,
+  "eval_start_year": 1970,
+  "eval_end_year": 2025,
+  "eval_samples_count": 12096,
+  "tuning_years": [
+    1940,
+    1969
+  ],
+  "git_commit": "35ba960814701595831094095dd67f0aaed460b7",
+  "data_md5": {
+    "data/processed/imd_cells_daily_1901_2025.csv": "fe21f583eb5255d8348b453aca56e46c",
+    "data/processed/imd_cells.csv": "7be80ae71b218063fecf9d7e7007c7bb",
+    "data/raw/climate_indices/nina34.anom.data": "efe8741c482e39d713480c61eb3486c7",
+    "data/raw/climate_indices/dmi.had.long.data": "39136dce384b56c3c58ee6f7c55e83fa"
+  },
+  "champion_rule": "M4 only if pooled year-block bootstrap 95% CI of (M4 - B2) mean pinball is entirely < 0",
+  "champion": "M4",
+  "pooled_metrics": {
+    "B2_empirical_quantiles": {
+      "pinball_loss_q10": 6.1486,
+      "pinball_loss_q50": 19.0433,
+      "pinball_loss_q90": 12.2872,
+      "mean_pinball_loss": 12.493,
+      "mae_median": 38.0866,
+      "coverage_80pct": 79.7536
+    },
+    "B4_quantile_regression": {
+      "pinball_loss_q10": 6.4218,
+      "pinball_loss_q50": 21.7391,
+      "pinball_loss_q90": 13.4373,
+      "mean_pinball_loss": 13.8661,
+      "mae_median": 43.4783,
+      "coverage_80pct": 78.4722
+    },
+    "M4_lgbm_boosted_from_climatology": {
+      "pinball_loss_q10": 6.1385,
+      "pinball_loss_q50": 19.0118,
+      "pinball_loss_q90": 12.1218,
+      "mean_pinball_loss": 12.424,
+      "mae_median": 38.0236,
+      "coverage_80pct": 79.1336
+    }
+  },
+  "pooled_vs_b2_year_block_bootstrap": {
+    "B4_quantile_regression": {
+      "mean_diff": 1.3731,
+      "ci95_low": 0.9279,
+      "ci95_high": 1.8002,
+      "p_model_worse_or_equal": 1.0
+    },
+    "M4_lgbm_boosted_from_climatology": {
+      "mean_diff": -0.069,
+      "ci95_low": -0.1094,
+      "ci95_high": -0.0336,
+      "p_model_worse_or_equal": 0.0
+    }
+  },
+  "per_cell_mean_pinball": {
+    "c12.50_77.00": {
+      "B2_empirical_quantiles": 18.8988,
+      "B4_quantile_regression": 19.0963,
+      "M4_lgbm_boosted_from_climatology": 18.5276
+    },
+    "c12.50_77.25": {
+      "B2_empirical_quantiles": 11.7373,
+      "B4_quantile_regression": 13.5566,
+      "M4_lgbm_boosted_from_climatology": 11.7455
+    },
+    "c12.50_77.50": {
+      "B2_empirical_quantiles": 12.2565,
+      "B4_quantile_regression": 13.8982,
+      "M4_lgbm_boosted_from_climatology": 12.2465
+    },
+    "c12.75_76.75": {
+      "B2_empirical_quantiles": 17.5435,
+      "B4_quantile_regression": 17.3034,
+      "M4_lgbm_boosted_from_climatology": 16.9558
+    },
+    "c12.75_77.00": {
+      "B2_empirical_quantiles": 11.7591,
+      "B4_quantile_regression": 13.6456,
+      "M4_lgbm_boosted_from_climatology": 11.7593
+    },
+    "c12.75_77.25": {
+      "B2_empirical_quantiles": 12.0972,
+      "B4_quantile_regression": 14.2633,
+      "M4_lgbm_boosted_from_climatology": 12.1046
+    },
+    "c12.75_77.50": {
+      "B2_empirical_quantiles": 11.8614,
+      "B4_quantile_regression": 13.874,
+      "M4_lgbm_boosted_from_climatology": 11.8571
+    },
+    "c12.75_77.75": {
+      "B2_empirical_quantiles": 11.3594,
+      "B4_quantile_regression": 12.7992,
+      "M4_lgbm_boosted_from_climatology": 11.3564
+    },
+    "c13.00_76.75": {
+      "B2_empirical_quantiles": 11.5065,
+      "B4_quantile_regression": 12.9688,
+      "M4_lgbm_boosted_from_climatology": 11.4358
+    },
+    "c13.00_77.00": {
+      "B2_empirical_quantiles": 12.7734,
+      "B4_quantile_regression": 14.5784,
+      "M4_lgbm_boosted_from_climatology": 12.7206
+    },
+    "c13.00_77.25": {
+      "B2_empirical_quantiles": 11.3913,
+      "B4_quantile_regression": 12.8891,
+      "M4_lgbm_boosted_from_climatology": 11.3988
+    },
+    "c13.00_77.50": {
+      "B2_empirical_quantiles": 12.5393,
+      "B4_quantile_regression": 13.9327,
+      "M4_lgbm_boosted_from_climatology": 12.5155
+    },
+    "c13.00_77.75": {
+      "B2_empirical_quantiles": 13.0287,
+      "B4_quantile_regression": 14.824,
+      "M4_lgbm_boosted_from_climatology": 12.9889
+    },
+    "c13.25_76.75": {
+      "B2_empirical_quantiles": 11.4039,
+      "B4_quantile_regression": 12.5888,
+      "M4_lgbm_boosted_from_climatology": 11.336
+    },
+    "c13.25_77.00": {
+      "B2_empirical_quantiles": 11.3453,
+      "B4_quantile_regression": 12.6137,
+      "M4_lgbm_boosted_from_climatology": 11.3124
+    },
+    "c13.25_77.25": {
+      "B2_empirical_quantiles": 11.0579,
+      "B4_quantile_regression": 12.3662,
+      "M4_lgbm_boosted_from_climatology": 11.0508
+    },
+    "c13.25_77.50": {
+      "B2_empirical_quantiles": 11.5224,
+      "B4_quantile_regression": 12.6586,
+      "M4_lgbm_boosted_from_climatology": 11.5241
+    },
+    "c13.25_77.75": {
+      "B2_empirical_quantiles": 10.7924,
+      "B4_quantile_regression": 11.7325,
+      "M4_lgbm_boosted_from_climatology": 10.7969
+    }
+  },
+  "per_cell_m4_vs_b2_bootstrap": {
+    "c12.50_77.00": {
+      "mean_diff": -0.3711,
+      "ci95_low": -0.5803,
+      "ci95_high": -0.171,
+      "p_model_worse_or_equal": 0.0005
+    },
+    "c12.50_77.25": {
+      "mean_diff": 0.0083,
+      "ci95_low": -0.0357,
+      "ci95_high": 0.0544,
+      "p_model_worse_or_equal": 0.6495
+    },
+    "c12.50_77.50": {
+      "mean_diff": -0.01,
+      "ci95_low": -0.0568,
+      "ci95_high": 0.0316,
+      "p_model_worse_or_equal": 0.3405
+    },
+    "c12.75_76.75": {
+      "mean_diff": -0.5877,
+      "ci95_low": -0.9554,
+      "ci95_high": -0.2435,
+      "p_model_worse_or_equal": 0.0
+    },
+    "c12.75_77.00": {
+      "mean_diff": 0.0003,
+      "ci95_low": -0.032,
+      "ci95_high": 0.033,
+      "p_model_worse_or_equal": 0.505
+    },
+    "c12.75_77.25": {
+      "mean_diff": 0.0074,
+      "ci95_low": -0.0263,
+      "ci95_high": 0.0399,
+      "p_model_worse_or_equal": 0.6805
+    },
+    "c12.75_77.50": {
+      "mean_diff": -0.0044,
+      "ci95_low": -0.0324,
+      "ci95_high": 0.0228,
+      "p_model_worse_or_equal": 0.3855
+    },
+    "c12.75_77.75": {
+      "mean_diff": -0.003,
+      "ci95_low": -0.0443,
+      "ci95_high": 0.0388,
+      "p_model_worse_or_equal": 0.4535
+    },
+    "c13.00_76.75": {
+      "mean_diff": -0.0707,
+      "ci95_low": -0.2135,
+      "ci95_high": 0.0503,
+      "p_model_worse_or_equal": 0.13
+    },
+    "c13.00_77.00": {
+      "mean_diff": -0.0528,
+      "ci95_low": -0.1002,
+      "ci95_high": -0.0067,
+      "p_model_worse_or_equal": 0.0125
+    },
+    "c13.00_77.25": {
+      "mean_diff": 0.0075,
+      "ci95_low": -0.0503,
+      "ci95_high": 0.0625,
+      "p_model_worse_or_equal": 0.6
+    },
+    "c13.00_77.50": {
+      "mean_diff": -0.0239,
+      "ci95_low": -0.0831,
+      "ci95_high": 0.0307,
+      "p_model_worse_or_equal": 0.23
+    },
+    "c13.00_77.75": {
+      "mean_diff": -0.0398,
+      "ci95_low": -0.1102,
+      "ci95_high": 0.0156,
+      "p_model_worse_or_equal": 0.0965
+    },
+    "c13.25_76.75": {
+      "mean_diff": -0.0679,
+      "ci95_low": -0.148,
+      "ci95_high": -0.0076,
+      "p_model_worse_or_equal": 0.0125
+    },
+    "c13.25_77.00": {
+      "mean_diff": -0.0329,
+      "ci95_low": -0.093,
+      "ci95_high": 0.0223,
+      "p_model_worse_or_equal": 0.117
+    },
+    "c13.25_77.25": {
+      "mean_diff": -0.0071,
+      "ci95_low": -0.0427,
+      "ci95_high": 0.0296,
+      "p_model_worse_or_equal": 0.3385
+    },
+    "c13.25_77.50": {
+      "mean_diff": 0.0017,
+      "ci95_low": -0.0313,
+      "ci95_high": 0.038,
+      "p_model_worse_or_equal": 0.555
+    },
+    "c13.25_77.75": {
+      "mean_diff": 0.0045,
+      "ci95_low": -0.0442,
+      "ci95_high": 0.0526,
+      "p_model_worse_or_equal": 0.566
+    }
+  },
+  "m4_tuned_params_per_cell": {
+    "c12.50_77.00": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50
+    },
+    "c12.50_77.25": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20
+    },
+    "c12.50_77.50": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20
+    },
+    "c12.75_76.75": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50
+    },
+    "c12.75_77.00": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50
+    },
+    "c12.75_77.25": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50
+    },
+    "c12.75_77.50": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20
+    },
+    "c12.75_77.75": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20
+    },
+    "c13.00_76.75": {
+      "n_estimators": 30,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20
+    },
+    "c13.00_77.00": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20
+    },
+    "c13.00_77.25": {
+      "n_estimators": 30,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20
+    },
+    "c13.00_77.50": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50
+    },
+    "c13.00_77.75": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20
+    },
+    "c13.25_76.75": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50
+    },
+    "c13.25_77.00": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20
+    },
+    "c13.25_77.25": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20
+    },
+    "c13.25_77.50": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20
+    },
+    "c13.25_77.75": {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50
+    }
+  }
+}

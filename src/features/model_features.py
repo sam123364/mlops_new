@@ -66,8 +66,8 @@ def monthly_max_dry_spell(daily: pd.DataFrame, rain_col: str = "rain_urban_mean_
     return d.groupby(["year", "month"])["run_len"].max().rename("max_dry_spell").reset_index()
 
 
-def add_dry_spell_lag(df: pd.DataFrame, daily: pd.DataFrame) -> pd.DataFrame:
-    spells = monthly_max_dry_spell(daily)
+def add_dry_spell_lag(df: pd.DataFrame, daily: pd.DataFrame, rain_col: str = "rain_urban_mean_mm") -> pd.DataFrame:
+    spells = monthly_max_dry_spell(daily, rain_col=rain_col)
     df = df.merge(spells, on=["year", "month"], how="left")
     df["max_dry_spell_lag1m"] = df["max_dry_spell"].shift(1)
     return df.drop(columns=["max_dry_spell"])
@@ -91,11 +91,12 @@ def build_model_features(
     monthly: pd.DataFrame,
     daily: pd.DataFrame,
     indices: pd.DataFrame | None = None,
+    rain_col: str = "rain_urban_mean_mm",
 ) -> pd.DataFrame:
     """Full feature table for the main model (one row per year-month)."""
     df = add_expanding_climatology(monthly)
     df = add_anomaly_memory(df)
-    df = add_dry_spell_lag(df, daily)
+    df = add_dry_spell_lag(df, daily, rain_col=rain_col)
     if indices is not None:
         df = add_climate_index_lags(df, indices)
     df["month_cat"] = df["month"].astype(int)
