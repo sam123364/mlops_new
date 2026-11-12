@@ -15,3 +15,22 @@ spatial:
 hydrology:
   default_dry_year_quantile: 0.10
   default_normal_year_quantile: 0.50
+
+# Main probabilistic rainfall model (src/models/main_model.py, src/evaluation/main_model_backtest.py)
+main_model:
+  quantiles: [0.10, 0.50, 0.90]
+  tune_start_year: 1940      # hyperparameters tuned on 1940-1969 only
+  eval_start_year: 1970      # frozen-parameter test period, same as baselines
+  eval_end_year: 2025
+  conformal_calib_years: 15
+  tuning_grid:
+    n_estimators: [150, 400]
+    learning_rate: [0.03]
+    num_leaves: [4, 8]
+    min_child_samples: [20, 50]
+  # Iteration 2: boosting starts from past-only empirical quantiles; few trees = close to B2.
+  tuning_grid_boosted:
+    n_estimators: [10, 30, 100, 300]
+    learning_rate: [0.03]
+    num_leaves: [4, 8]
+    min_child_samples: [20, 50]

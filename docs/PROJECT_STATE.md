@@ -30,10 +30,16 @@
 - [x] Authored baseline architecture and DAGsHub remote sync guide in `docs/baseline_models.md`.
 - [x] Unit test suite (`tests/test_baselines.py`) - all 8 unit tests passed.
 
+- [x] Main model (`feat/main-model`): LightGBM quantile regression (Q10/Q50/Q90) with new leak-free features (past-only climatology, anomaly memory, dry-spell lag) and lagged ENSO (Niño 3.4) and IOD (DMI) indices from NOAA PSL. Tuned on 1940–1969, backtested 1970–2025 against the baselines. See `docs/main_model.md`.
+- [x] Result: no ML variant beats B2. Best (M4, boosted from climatology) ties B2 (mean pinball 11.253 vs 11.252; 95% CI of difference [−0.037, +0.037]). Climate indices add no detectable skill at a 1-month lead.
+
 ## 4. In Progress / Next Steps
 - [ ] Configure DAGsHub remote credentials for remote DVC push and web MLflow sync.
 - [ ] Implement deterministic hydrology balance engine (`src/hydrology/`) for tank sizing and demand offset simulation.
 - [ ] Spatial leave-one-gauge-out cross-validation harness for KSNDMC micro-climate adjustments.
 
 ## 5. Open Questions / Blockers
-- None currently.
+- `departure_pct_lag1m` (used by B4) uses monthly normals from all of 1901–2025, including test years: a small look-ahead leak. The main model uses past-only anomalies instead.
+- Licences for the NOAA PSL Niño 3.4 (ERSST v6) and DMI (HadISST1.1) files are not yet verified.
+- Climate-index data is tracked with DVC locally but not pushed (DAGsHub credentials needed).
+- Next modelling targets from the brief: seasonal totals and longest dry spell, and the KSNDMC spatial adjustment (leave-one-gauge-out).
