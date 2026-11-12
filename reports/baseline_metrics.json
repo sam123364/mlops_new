@@ -1,0 +1,43 @@
+{
+  "target": "monthly_rain_mm",
+  "eval_start_year": 1970,
+  "eval_end_year": 2025,
+  "eval_samples_count": 672,
+  "min_train_years": 30,
+  "feature_cols": [
+    "month_sin",
+    "month_cos",
+    "rain_lag1m",
+    "rain_lag2m",
+    "wet_days_lag1m",
+    "rolling_3m_sum",
+    "rolling_12m_sum",
+    "departure_pct_lag1m"
+  ],
+  "git_commit": "d4f22dac3a0c4bef8da2d36aafdd49c0b3c659ac",
+  "models": {
+    "B1_climatology_mean": {
+      "mae": 34.5675
+    },
+    "B1_climatology_median": {
+      "mae": 33.8062
+    },
+    "B2_empirical_quantiles": {
+      "pinball_loss_q10": 5.8488,
+      "pinball_loss_q50": 16.9031,
+      "pinball_loss_q90": 11.0038,
+      "mae_median": 33.8062,
+      "coverage_80pct": 80.9524
+    },
+    "B3_persistence_lag1": {
+      "mae": 48.128
+    },
+    "B4_quantile_regression": {
+      "pinball_loss_q10": 6.1387,
+      "pinball_loss_q50": 20.4165,
+      "pinball_loss_q90": 12.4539,
+      "mae_median": 40.8331,
+      "coverage_80pct": 79.7619
+    }
+  }
+}
