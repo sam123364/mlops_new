@@ -81,7 +81,7 @@ Difference in mean pinball loss vs B2 (negative = better than B2), 95% CI:
 - **No model beats B2.** The best ML model, M4, is statistically tied with B2. Tuning on 1940–1969 chose the smallest correction offered (10 trees), meaning the data say "stay with climatology".
 - Training trees from scratch (M1–M3) is clearly worse: they spend capacity re-learning the seasonal cycle from about 800 training months.
 - Climate indices add almost nothing at a 1-month lead for this IMD cell: M4 vs M5 differs by 0.03 pinball. Diagnostic correlations for 1970–2025: Oct–Dec total vs September Niño 3.4, −0.03; vs September DMI, −0.03. Jun–Sep total vs May Niño 3.4, −0.10.
-- Q50 feature importance is dominated by the seasonal cycle (`month_cat`, climatology features).
+- Feature importance (Q50, gain share): in the from-scratch M2, the seasonal cycle dominates (`month_cat` about 64%, climatology features most of the rest). In M4, whose trees only learn corrections to climatology, those corrections use mostly `nino34_tend_lag1` (36%), `dmi_lag1` (13%) and `anom_lag1m` (10%). The corrections are tiny (10 trees at learning rate 0.03) and give no measurable skill.
 - **Recommendation:** keep B2 as the production model (the registry gate selects it). Keep M4 as the main ML candidate: it never does meaningfully worse than B2, stays calibrated, and will pick up skill automatically if more informative predictors are added. The most promising place for ML in this project is the spatial adjustment with KSNDMC gauges (brief §7.2), not the 1-month-ahead temporal forecast.
 
 ## 7. Limitations
