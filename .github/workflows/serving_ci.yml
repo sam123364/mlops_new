@@ -1,0 +1,35 @@
+name: Serving API CI
+
+on:
+  push:
+    branches: [main, feat/*]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-serving:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint serving and per-cell model code
+        run: |
+          ruff check src/serving src/models/cell_model_bundle.py src/models/package_cell_model.py \
+            src/features/cell_features.py src/evaluation/cell_backtest.py src/ingest/imd_cells.py tests/test_serving.py
+
+      # Uses synthetic model bundles only: no DVC data or MLflow registry needed in CI.
+      - name: Run serving, bundle and leakage tests
+        run: |
+          pytest tests/test_serving.py tests/test_main_model.py -v

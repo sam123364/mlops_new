@@ -33,6 +33,11 @@ seaborn==0.13.2
 dvc==3.67.1
 mlflow==3.18.0
 
+# Serving (FastAPI inference service)
+fastapi==0.162.5
+uvicorn==0.54.0
+httpx==0.28.1
+
 # Dev / testing
 pytest==9.2.0
 ruff==0.17.4

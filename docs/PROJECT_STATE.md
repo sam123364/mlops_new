@@ -41,16 +41,24 @@
 - [x] Result: no ML variant beats B2. Best (M4, boosted from climatology) ties B2 (mean pinball 11.253 vs 11.252; 95% CI of difference [−0.037, +0.037]). Climate indices add no detectable skill at a 1-month lead.
 - [x] Added pinned `requirements.txt` (Python 3.12; data, geospatial, modelling, DVC, MLflow, pytest, ruff, Jupyter). Local setup: `uv python install 3.12`, `uv venv --python 3.12 .venv`, `uv pip install --python .venv/bin/python -r requirements.txt`. On macOS, LightGBM also needs `brew install libomp`.
 
+- [x] Location-aware model (`feat/serving`): per-cell monthly series for the 18 IMD 0.25° cells overlapping the Bengaluru urban-region boundary (`src/ingest/imd_cells.py`, DVC-tracked), same leak-free features per cell (`src/features/cell_features.py`), per-cell backtest 1970–2025 with M4 tuned per cell on 1940–1969 (`src/evaluation/cell_backtest.py`). Pooled over 18 cells, M4 beats B2: mean pinball 12.424 vs 12.493, difference −0.069 (95% CI −0.109 to −0.034), about 0.6%. Significant in 4 of 18 cells (western edge), worse in none. See `docs/serving.md`.
+- [x] Servable models: B2 and M4 packaged as self-contained `mlflow.pyfunc` bundles and registered as `bengaluru_rainfall_by_cell` v1 (B2, `challenger`) and v2 (M4, `production`) by a pre-set champion rule (`src/models/package_cell_model.py`).
+- [x] FastAPI inference service (`src/serving/`): `/health`, `/model`, `/cells`, `/predict`, `/predict/batch`; input lat/lon/year/month; output Q10/Q50/Q90 with basis (forecast, climatology, backtest), climatology reference and model version. 16 tests (`tests/test_serving.py`), CI workflow `serving_ci.yml`. AGENTS.md updated: serving brought forward from Phase 2.
+
 ## 4. In Progress / Next Steps
 - [ ] Configure DAGsHub remote credentials for remote DVC push and web MLflow sync.
 - [ ] Implement deterministic hydrology balance engine (`src/hydrology/`) for tank sizing and demand offset simulation.
 - [ ] Spatial leave-one-gauge-out cross-validation harness for KSNDMC micro-climate adjustments.
+- [ ] Download KSNDMC OpenCity data (hobli seasonal totals 2017–2024, AWS locations) and add a gauge-based adjustment on top of the IMD cell forecast in the service.
+- [ ] Docker image for the API; rooftop harvest endpoint once runoff and first-flush parameters are cited.
 
 ## 5. Open Questions / Blockers
 - `departure_pct_lag1m` (used by B4) uses monthly normals from all of 1901–2025, including test years: a small look-ahead leak. The main model uses past-only anomalies instead.
 - Licences for the NOAA PSL Niño 3.4 (ERSST v6) and DMI (HadISST1.1) files are not yet verified.
 - Climate-index data is tracked with DVC locally but not pushed (DAGsHub credentials needed).
 - Regenerated processed CSVs reproduce every baseline metric exactly but differ byte-wise from the DVC hashes (float formatting under pandas 3.1). Re-run `dvc add` after agreeing on the pinned environment.
-- Registered baseline versions have no serialized estimator (model card only).
+- Registered baseline versions have no serialized estimator (model card only). The servable models are in `bengaluru_rainfall_by_cell`.
+- The served data ends 2025-12, so the forecast month (2026-01) is already past. Regular data updates are needed for real forecasts.
+- MLflow registry is local (`mlflow.db`, gitignored): each machine must run `python -m src.models.package_cell_model` before starting the API.
 - Next modelling targets from the brief: seasonal totals and longest dry spell, and the KSNDMC spatial adjustment (leave-one-gauge-out).
 - The IMD NetCDF stores its variables in a `rain` group: open with `xr.open_dataset(path, group="rain")`.
