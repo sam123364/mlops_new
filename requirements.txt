@@ -1,0 +1,40 @@
+# Python 3.12 (the EDA notebook was executed on 3.12.4)
+# Setup:
+#   uv python install 3.12
+#   uv venv --python 3.12 .venv
+#   uv pip install --python .venv/bin/python -r requirements.txt
+
+# Core data
+numpy==2.5.4
+pandas==3.1.1
+pyyaml==6.0.3
+
+# Gridded / geospatial
+xarray==2026.9.0
+netcdf4==1.7.5.1.post1
+h5py==3.16.0
+geopandas==1.2.0
+rasterio==1.5.2
+
+# Modelling
+scikit-learn==1.9.1
+statsmodels==0.15.0
+# macOS: LightGBM needs the OpenMP runtime first: `brew install libomp`
+lightgbm==4.7.0
+
+# Validation
+pandera==0.36.0
+
+# Plotting
+matplotlib==3.11.2
+seaborn==0.13.2
+
+# MLOps
+dvc==3.67.1
+mlflow==3.18.0
+
+# Dev / testing
+pytest==9.2.0
+ruff==0.17.4
+notebook==7.6.5
+ipykernel==7.4.0
