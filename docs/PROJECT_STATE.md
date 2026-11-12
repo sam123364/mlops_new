@@ -45,12 +45,15 @@
 - [x] Servable models: B2 and M4 packaged as self-contained `mlflow.pyfunc` bundles and registered as `bengaluru_rainfall_by_cell` v1 (B2, `challenger`) and v2 (M4, `production`) by a pre-set champion rule (`src/models/package_cell_model.py`).
 - [x] FastAPI inference service (`src/serving/`): `/health`, `/model`, `/cells`, `/predict`, `/predict/batch`; input lat/lon/year/month; output Q10/Q50/Q90 with basis (forecast, climatology, backtest), climatology reference and model version. 16 tests (`tests/test_serving.py`), CI workflow `serving_ci.yml`. AGENTS.md updated: serving brought forward from Phase 2.
 
+- [x] Docker image for the API (`Dockerfile`, `requirements-serving.txt`, `scripts/docker_build.sh`, `docker-compose.yml`): exports the `production` model version from the registry into the image (`src/serving/export_model.py`); non-root, read-only filesystem, healthcheck. Tested locally with Colima: same answers as the local API, about 1.2 GB, ready in about 2 s. CI job `docker-image` builds and smoke-tests it with a synthetic model.
+
 ## 4. In Progress / Next Steps
 - [ ] Configure DAGsHub remote credentials for remote DVC push and web MLflow sync.
 - [ ] Implement deterministic hydrology balance engine (`src/hydrology/`) for tank sizing and demand offset simulation.
 - [ ] Spatial leave-one-gauge-out cross-validation harness for KSNDMC micro-climate adjustments.
 - [ ] Download KSNDMC OpenCity data (hobli seasonal totals 2017–2024, AWS locations) and add a gauge-based adjustment on top of the IMD cell forecast in the service.
-- [ ] Docker image for the API; rooftop harvest endpoint once runoff and first-flush parameters are cited.
+- [ ] Rooftop harvest endpoint once runoff and first-flush parameters are cited.
+- [ ] Push the image to a container registry (GHCR or DAGsHub) and decide where it is deployed.
 
 ## 5. Open Questions / Blockers
 - `departure_pct_lag1m` (used by B4) uses monthly normals from all of 1901–2025, including test years: a small look-ahead leak. The main model uses past-only anomalies instead.

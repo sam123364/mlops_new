@@ -69,6 +69,37 @@ curl -X POST localhost:8000/predict -H 'content-type: application/json' \
 Environment variables: `RAINFALL_MODEL_URI` (default `models:/bengaluru_rainfall_by_cell@production`;
 use `@challenger` to serve B2) and `MLFLOW_TRACKING_URI` (default `sqlite:///mlflow.db`).
 
+## Docker
+
+The image contains the API code and one exported model version. It does not contain the MLflow
+registry, training code or data, so one image = one model version.
+
+```bash
+scripts/docker_build.sh            # export models:/bengaluru_rainfall_by_cell@production, build image
+docker compose up -d               # run on http://localhost:8000 (read-only filesystem, non-root)
+docker compose down
+```
+
+- `scripts/docker_build.sh` runs `python -m src.serving.export_model`. That writes the registered
+  model and a `registry_info.json` (name, version, alias, run id) to `build/model/` (gitignored).
+  The script then builds the image with tags `bengaluru-rainfall-api:<model>-v<version>` and `:latest`
+  and labels for the git commit and model version. Pass another URI to package a different version:
+  `scripts/docker_build.sh models:/bengaluru_rainfall_by_cell@challenger`.
+- Base image: `python:3.12.13-slim-bookworm`. Runtime dependencies are pinned in
+  `requirements-serving.txt`, which uses `mlflow-skinny` instead of the full MLflow server stack.
+- Runs as uid 10001 with a read-only root filesystem (`/tmp` is tmpfs) and a `HEALTHCHECK` on `/health`.
+- Measured locally (Apple silicon, Colima): image about 1.2 GB, ready about 2 s after start, about
+  170 MB RAM. Most of the size is dependencies (pyarrow 155 MB, scipy 150 MB required by LightGBM,
+  pandas, GDAL inside pyogrio). The code and model are about 3 MB.
+- CI (`Serving API CI`, job `docker-image`) builds the image around a synthetic model
+  (`tests/make_synthetic_model.py`), because CI has no registry. It runs the container and checks
+  `/health`, a forecast and an out-of-area 422.
+
+Local Docker on macOS: `brew install colima docker docker-buildx docker-compose`, then `colima start`.
+To use BuildKit instead of the deprecated legacy builder, add
+`"cliPluginsExtraDirs": ["/opt/homebrew/lib/docker/cli-plugins"]` to `~/.docker/config.json`.
+`docker compose` also needs that setting; until then use `docker-compose`.
+
 ## Endpoints
 
 | Method | Path | Returns |
@@ -92,7 +123,7 @@ version is registered. The `production` alias moves only if the champion rule is
 - Only 1 month ahead. Beyond that, climatology.
 - The data ends in 2025-12, so the "forecast" month (2026-01) is already in the past. It becomes a
   real forecast once data is updated regularly.
-- No Docker image or authentication yet. Run locally only.
+- No authentication or TLS: run locally or behind a gateway only. The image is not pushed to any registry yet.
 
 ## Tests
 

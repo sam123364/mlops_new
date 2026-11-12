@@ -1,0 +1,14 @@
+# Run the inference container locally: docker compose up
+# Build the image first with scripts/docker_build.sh (it exports the model from the registry).
+services:
+  rainfall-api:
+    image: bengaluru-rainfall-api:latest
+    container_name: bengaluru-rainfall-api
+    ports:
+      - "8000:8000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
