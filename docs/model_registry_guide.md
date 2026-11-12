@@ -71,6 +71,18 @@ When a model is registered:
 
 ## 4. Usage Instructions
 
+### Where the metrics come from
+The registry never invents metrics. Runs come from either:
+1. A real backtest logged to MLflow: `python -m src.evaluation.run_baseline_backtest --log-mlflow --tracking-uri sqlite:///mlflow.db`, or
+2. `reports/baseline_metrics.json`, written by that same backtest and committed to Git. Pass it with `--metrics-file` to populate an empty experiment (this is what CI does). Each run is tagged with the file's path and MD5.
+
+With no runs and no metrics file, registration fails with an error.
+
+### How the model is selected
+Among runs that report pinball loss at Q10, Q50 and Q90 and `coverage_80pct`, the run with the **lowest mean pinball loss** is selected (ties broken by MAE). Point-only models (B1, B3) are not eligible. On the current backtest (1970–2025, 672 months) this is **B2 Empirical Quantiles** (mean pinball 11.25, MAE 33.81 mm, coverage 80.95%), which passes the gate.
+
+**Limitation:** baseline runs have no serialized estimator; the registered artifact is a model card (`model/model_card.json`). B2 is refit from the DVC-tracked data.
+
 ### Run Registration Locally:
 ```bash
 python -m src.models.register_model --tracking-uri sqlite:///mlflow.db
@@ -78,7 +90,7 @@ python -m src.models.register_model --tracking-uri sqlite:///mlflow.db
 
 ### Run Registration with Production Promotion Gate:
 ```bash
-python -m src.models.register_model --promote --tracking-uri sqlite:///mlflow.db
+python -m src.models.register_model --promote --tracking-uri sqlite:///mlflow.db --metrics-file reports/baseline_metrics.json
 ```
 
 ### Run Remote DAGsHub Sync:

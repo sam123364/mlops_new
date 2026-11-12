@@ -35,10 +35,14 @@
 - [x] Created GitHub Actions CI/CD pipeline (`.github/workflows/model_registry_ci.yml`) verifying dependencies and running test suite on PRs.
 - [x] Documented model registry best practices, lineage, and DAGsHub inspection guide in `docs/model_registry_guide.md`.
 
+- [x] Registry fix: removed hard-coded seeded metrics; empty experiments are populated only from `reports/baseline_metrics.json` (written by `src/evaluation/run_baseline_backtest.py`); model chosen by lowest mean pinball loss. Selects B2 (MAE 33.81 mm, coverage 80.95%), which passes the gate.
+
 ## 4. In Progress / Next Steps
 - [ ] Configure DAGsHub remote credentials for remote DVC push and web MLflow sync.
 - [ ] Implement deterministic hydrology balance engine (`src/hydrology/`) for tank sizing and demand offset simulation.
 - [ ] Spatial leave-one-gauge-out cross-validation harness for KSNDMC micro-climate adjustments.
 
 ## 5. Open Questions / Blockers
-- None currently.
+- `departure_pct_lag1m` (used by B4) is built from monthly normals over all of 1901–2025, including test years: a small look-ahead leak. Normals should be recomputed inside each training window.
+- Regenerated processed CSVs reproduce every baseline metric exactly but differ byte-wise from the DVC hashes (float formatting under pandas 3.1). Re-run `dvc add` after agreeing on the pinned environment.
+- Registered baseline versions have no serialized estimator (model card only).
