@@ -39,6 +39,7 @@
 
 - [x] Main model (`feat/main-model`): LightGBM quantile regression (Q10/Q50/Q90) with new leak-free features (past-only climatology, anomaly memory, dry-spell lag) and lagged ENSO (Niño 3.4) and IOD (DMI) indices from NOAA PSL. Tuned on 1940–1969, backtested 1970–2025 against the baselines. See `docs/main_model.md`.
 - [x] Result: no ML variant beats B2. Best (M4, boosted from climatology) ties B2 (mean pinball 11.253 vs 11.252; 95% CI of difference [−0.037, +0.037]). Climate indices add no detectable skill at a 1-month lead.
+- [x] Added pinned `requirements.txt` (Python 3.12; data, geospatial, modelling, DVC, MLflow, pytest, ruff, Jupyter). Local setup: `uv python install 3.12`, `uv venv --python 3.12 .venv`, `uv pip install --python .venv/bin/python -r requirements.txt`. On macOS, LightGBM also needs `brew install libomp`.
 
 ## 4. In Progress / Next Steps
 - [ ] Configure DAGsHub remote credentials for remote DVC push and web MLflow sync.
@@ -52,3 +53,4 @@
 - Regenerated processed CSVs reproduce every baseline metric exactly but differ byte-wise from the DVC hashes (float formatting under pandas 3.1). Re-run `dvc add` after agreeing on the pinned environment.
 - Registered baseline versions have no serialized estimator (model card only).
 - Next modelling targets from the brief: seasonal totals and longest dry spell, and the KSNDMC spatial adjustment (leave-one-gauge-out).
+- The IMD NetCDF stores its variables in a `rain` group: open with `xr.open_dataset(path, group="rain")`.
