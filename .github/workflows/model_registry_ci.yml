@@ -1,0 +1,37 @@
+name: Model Registry & CI Suite
+
+on:
+  push:
+    branches: [main, feat/*]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test-and-verify-registry:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest dvc mlflow scikit-learn pandas numpy pyyaml
+
+      - name: Verify dependencies
+        run: |
+          python -c "import mlflow, dvc, sklearn, pandas, numpy, yaml; print('All core registry dependencies satisfied.')"
+
+      - name: Run Model Registry Unit Tests
+        run: |
+          pytest tests/test_register_model.py -v
+
+      - name: Verify Model Registration CLI Pipeline
+        run: |
+          python -m src.models.register_model --promote --tracking-uri sqlite:///ci_test_mlflow.db --metrics-file reports/baseline_metrics.json
