@@ -21,6 +21,7 @@ from src.models.cell_model_bundle import CellRainfallBundle
 from src.models.main_model import LGBMQuantileModel, LGBMQuantileParams
 from src.serving.app import create_app
 from src.serving.predictor import Predictor
+from src.serving.schemas import PredictRequest
 
 CENTRAL = "c13.00_77.50"
 EAST = "c13.00_77.75"
@@ -222,3 +223,15 @@ def test_forecast_row_has_no_target_and_complete_rainfall_features() -> None:
     assert len(fc) == 1
     assert fc["monthly_rain_mm"].isna().all()
     assert fc[RAINFALL_FEATURES].notna().all().all()
+
+
+# ---------- exported model (what the Docker image loads) ----------
+def test_exported_model_loads_with_registry_info(tmp_path: Path) -> None:
+    from tests.make_synthetic_model import main as make_model
+
+    out = tmp_path / "model"
+    make_model(str(out))
+    p = Predictor.from_registry(str(out))
+    assert (p.registered_name, p.version, p.alias) == ("synthetic_ci_model", "0", "ci")
+    pred = p.predict([PredictRequest(lat=JAYANAGAR[0], lon=JAYANAGAR[1], year=2026, month=1)])[0]
+    assert pred.basis == "forecast" and pred.model.version == "0"

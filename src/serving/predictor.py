@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import json
 import math
 import os
 from dataclasses import dataclass
+from pathlib import Path
 
 import pandas as pd
 
@@ -50,11 +52,17 @@ class Predictor:
         from mlflow import MlflowClient
 
         model_uri = model_uri or os.getenv("RAINFALL_MODEL_URI", DEFAULT_MODEL_URI)
-        mlflow.set_tracking_uri(tracking_uri or os.getenv("MLFLOW_TRACKING_URI", DEFAULT_TRACKING_URI))
+        if model_uri.startswith("models:/"):  # an exported local model needs no tracking server
+            mlflow.set_tracking_uri(tracking_uri or os.getenv("MLFLOW_TRACKING_URI", DEFAULT_TRACKING_URI))
         pyfunc = mlflow.pyfunc.load_model(model_uri)
         bundle = pyfunc.unwrap_python_model().bundle
         name = version = alias = None
-        if model_uri.startswith("models:/"):
+        info_file = Path(model_uri) / "registry_info.json"
+        if not model_uri.startswith("models:/") and info_file.exists():
+            # Exported model (Docker image): registry details were saved at export time.
+            info = json.loads(info_file.read_text())
+            name, version, alias = info.get("registered_name"), info.get("version"), info.get("alias")
+        elif model_uri.startswith("models:/"):
             ref = model_uri.removeprefix("models:/")
             client = MlflowClient()
             if "@" in ref:

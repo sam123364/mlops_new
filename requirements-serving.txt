@@ -1,0 +1,21 @@
+# Runtime dependencies of the inference container only (see Dockerfile).
+# Full development environment: requirements.txt. Keep shared pins identical.
+
+# API
+fastapi==0.162.5
+uvicorn==0.54.0
+pydantic==2.14.3
+
+# Model loading (pyfunc) without the MLflow tracking server stack
+mlflow-skinny==3.18.0
+cloudpickle==3.1.2
+
+# Model and location lookup
+lightgbm==4.7.0
+numpy==2.5.4
+pandas==3.1.1
+pyarrow==26.0.1  # pandas 3 uses it for strings; also needed to unpickle the model
+geopandas==1.2.0
+shapely==2.2.0
+pyogrio==0.13.0
+pyproj==3.8.0

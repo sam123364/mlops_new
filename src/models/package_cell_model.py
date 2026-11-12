@@ -107,7 +107,7 @@ def build_bundle(kind: str, out_dir: Path, feats: pd.DataFrame, report: dict, pr
 
 
 def _pip_requirements() -> list[str]:
-    pkgs = ["mlflow", "lightgbm", "pandas", "numpy", "geopandas", "shapely", "scikit-learn"]
+    pkgs = ["mlflow", "lightgbm", "pandas", "pyarrow", "numpy", "geopandas", "shapely"]  # inference only
     return [f"{p}=={md.version(p)}" for p in pkgs]
 
 
