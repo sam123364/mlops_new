@@ -1,0 +1,346 @@
+{
+  "M1_lgbm_rainfall_features": [
+    {
+      "n_estimators": 150,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.155327561912811
+    },
+    {
+      "n_estimators": 150,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.14464907285234
+    },
+    {
+      "n_estimators": 150,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.422934405379108
+    },
+    {
+      "n_estimators": 150,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.251793032623842
+    },
+    {
+      "n_estimators": 400,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.209631590551387
+    },
+    {
+      "n_estimators": 400,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.165094567141335
+    },
+    {
+      "n_estimators": 400,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.550023324398927
+    },
+    {
+      "n_estimators": 400,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.341344175466373
+    }
+  ],
+  "M2_lgbm_with_climate_indices": [
+    {
+      "n_estimators": 150,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.206084241895937
+    },
+    {
+      "n_estimators": 150,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.279891896165728
+    },
+    {
+      "n_estimators": 150,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.46544248385453
+    },
+    {
+      "n_estimators": 150,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.428487423444112
+    },
+    {
+      "n_estimators": 400,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.320584426339543
+    },
+    {
+      "n_estimators": 400,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.333635156211676
+    },
+    {
+      "n_estimators": 400,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.581507445615374
+    },
+    {
+      "n_estimators": 400,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.612917945102538
+    }
+  ],
+  "M4_lgbm_boosted_from_climatology": [
+    {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 9.979673818581603
+    },
+    {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 9.990116520713633
+    },
+    {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.018163559804224
+    },
+    {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 9.98361974142644
+    },
+    {
+      "n_estimators": 30,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.060089489040038
+    },
+    {
+      "n_estimators": 30,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.071490611744181
+    },
+    {
+      "n_estimators": 30,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.105216137549483
+    },
+    {
+      "n_estimators": 30,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.078015160921993
+    },
+    {
+      "n_estimators": 100,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.202740328851169
+    },
+    {
+      "n_estimators": 100,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.243063370390297
+    },
+    {
+      "n_estimators": 100,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.277708730276643
+    },
+    {
+      "n_estimators": 100,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.28764891437544
+    },
+    {
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.424557852326476
+    },
+    {
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.457073358615242
+    },
+    {
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.58364648749072
+    },
+    {
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.547146415413506
+    }
+  ],
+  "M5_lgbm_boosted_rainfall_only": [
+    {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 9.968203856868127
+    },
+    {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 9.970695874202512
+    },
+    {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 9.975659159465152
+    },
+    {
+      "n_estimators": 10,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 9.95743861383731
+    },
+    {
+      "n_estimators": 30,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.023721098733205
+    },
+    {
+      "n_estimators": 30,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.017464470714414
+    },
+    {
+      "n_estimators": 30,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.064313421695198
+    },
+    {
+      "n_estimators": 30,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.011353422284492
+    },
+    {
+      "n_estimators": 100,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.116297937900788
+    },
+    {
+      "n_estimators": 100,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.13335041457782
+    },
+    {
+      "n_estimators": 100,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.27196870461353
+    },
+    {
+      "n_estimators": 100,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.195787203495149
+    },
+    {
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.295569743419787
+    },
+    {
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "num_leaves": 4,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.261361159605228
+    },
+    {
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 20,
+      "val_mean_pinball": 10.497438489574819
+    },
+    {
+      "n_estimators": 300,
+      "learning_rate": 0.03,
+      "num_leaves": 8,
+      "min_child_samples": 50,
+      "val_mean_pinball": 10.465638705625032
+    }
+  ]
+}
