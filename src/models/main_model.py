@@ -27,6 +27,18 @@ import pandas as pd
 QUANTILES = (0.10, 0.50, 0.90)
 
 
+def sqrt_to_mm_quantiles(raw: dict[float, np.ndarray], offsets: dict[float, float] | None = None) -> dict[float, np.ndarray]:
+    """Turn per-quantile predictions of sqrt(rain) into mm: shift, clip at 0, sort, square.
+
+    Shared by training-time prediction and the serving bundle so both give identical numbers.
+    """
+    qs = sorted(raw)
+    offsets = offsets or {}
+    stacked = np.column_stack([np.maximum(raw[q] + offsets.get(q, 0.0), 0.0) for q in qs])
+    stacked = np.sort(stacked, axis=1) ** 2  # non-crossing, back to mm
+    return {q: stacked[:, i] for i, q in enumerate(qs)}
+
+
 @dataclass
 class LGBMQuantileParams:
     n_estimators: int = 300
@@ -109,10 +121,7 @@ class LGBMQuantileModel:
         return self
 
     def predict_all_quantiles(self, df: pd.DataFrame) -> dict[float, np.ndarray]:
-        raw = self._predict_sqrt(self.models_, df)
-        stacked = np.column_stack([np.maximum(raw[q] + self.offsets_[q], 0.0) for q in self.quantiles])
-        stacked = np.sort(stacked, axis=1) ** 2  # non-crossing, back to mm
-        return {q: stacked[:, i] for i, q in enumerate(self.quantiles)}
+        return sqrt_to_mm_quantiles(self._predict_sqrt(self.models_, df), self.offsets_)
 
     def feature_importance(self, q: float = 0.5) -> pd.Series:
         m = self.models_[q]
