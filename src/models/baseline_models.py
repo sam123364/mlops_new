@@ -8,7 +8,7 @@ Implements benchmark models compliant with docs/PROJECT_BRIEF.md section 7.3:
 4. Quantile Regression on Engineered Antecedent & Harmonic Features
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import QuantileRegressor

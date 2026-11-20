@@ -9,7 +9,7 @@ Implements:
 5. Local and Remote MLflow Experiment Tracking
 """
 
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 import os
 import numpy as np
 import pandas as pd

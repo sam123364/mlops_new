@@ -6,15 +6,11 @@ import numpy as np
 import pandas as pd
 import pytest
 from src.models.baseline_models import (
-    ClimatologyBaseline,
     EmpiricalQuantileBaseline,
-    PersistenceBaseline,
-    QuantileRegressionBaseline,
 )
 from src.evaluation.backtest import (
     compute_mae,
     compute_pinball_loss,
-    compute_interval_coverage,
     ExpandingWindowEvaluator,
 )
 
