@@ -1,0 +1,185 @@
+{
+  "dataset_metadata": {
+    "reference": {
+      "years": "1970-2005",
+      "samples": 432
+    },
+    "current_normal": {
+      "years": "2006-2025",
+      "samples": 240
+    },
+    "current_drifted": {
+      "years": "Simulated Drift Batch (240 samples)",
+      "samples": 240
+    }
+  },
+  "tests": {
+    "normal_batch": {
+      "actual": {
+        "ks_statistic": 0.0931,
+        "p_value": 0.12939,
+        "psi": 0.0725,
+        "wasserstein_distance": 14.9438,
+        "ks_drift_flag": false,
+        "psi_drift_flag": false,
+        "status": "STABLE",
+        "ref_mean": 67.08,
+        "curr_mean": 82.02,
+        "ref_std": 73.78,
+        "curr_std": 84.58
+      },
+      "m4_q50": {
+        "ks_statistic": 0.0944,
+        "p_value": 0.119275,
+        "psi": 0.2515,
+        "wasserstein_distance": 2.156,
+        "ks_drift_flag": false,
+        "psi_drift_flag": true,
+        "status": "SIGNIFICANT_DRIFT",
+        "ref_mean": 59.45,
+        "curr_mean": 60.38,
+        "ref_std": 51.78,
+        "curr_std": 53.33
+      },
+      "m4_q10": {
+        "ks_statistic": 0.0671,
+        "p_value": 0.468932,
+        "psi": 0.1787,
+        "wasserstein_distance": 0.9055,
+        "ks_drift_flag": false,
+        "psi_drift_flag": false,
+        "status": "MODERATE_SHIFT",
+        "ref_mean": 22.0,
+        "curr_mean": 22.23,
+        "ref_std": 21.19,
+        "curr_std": 21.41
+      },
+      "m4_q90": {
+        "ks_statistic": 0.0972,
+        "p_value": 0.100988,
+        "psi": 0.3504,
+        "wasserstein_distance": 5.5172,
+        "ks_drift_flag": false,
+        "psi_drift_flag": true,
+        "status": "SIGNIFICANT_DRIFT",
+        "ref_mean": 118.12,
+        "curr_mean": 122.2,
+        "ref_std": 79.4,
+        "curr_std": 83.23
+      },
+      "b2_q50": {
+        "ks_statistic": 0.0954,
+        "p_value": 0.112899,
+        "psi": 0.3322,
+        "wasserstein_distance": 1.8021,
+        "ks_drift_flag": false,
+        "psi_drift_flag": true,
+        "status": "SIGNIFICANT_DRIFT",
+        "ref_mean": 59.61,
+        "curr_mean": 60.23,
+        "ref_std": 52.02,
+        "curr_std": 53.07
+      }
+    },
+    "induced_drift_batch": {
+      "actual": {
+        "ks_statistic": 0.419,
+        "p_value": 0.0,
+        "psi": 0.8195,
+        "wasserstein_distance": 144.8943,
+        "ks_drift_flag": true,
+        "psi_drift_flag": true,
+        "status": "SIGNIFICANT_DRIFT",
+        "ref_mean": 67.08,
+        "curr_mean": 211.97,
+        "ref_std": 73.78,
+        "curr_std": 215.05
+      },
+      "m4_q50": {
+        "ks_statistic": 0.4019,
+        "p_value": 0.0,
+        "psi": 2.786,
+        "wasserstein_distance": 31.9594,
+        "ks_drift_flag": true,
+        "psi_drift_flag": true,
+        "status": "SIGNIFICANT_DRIFT",
+        "ref_mean": 59.45,
+        "curr_mean": 27.76,
+        "ref_std": 51.78,
+        "curr_std": 23.95
+      },
+      "m4_q10": {
+        "ks_statistic": 0.4167,
+        "p_value": 0.0,
+        "psi": 3.1973,
+        "wasserstein_distance": 11.4984,
+        "ks_drift_flag": true,
+        "psi_drift_flag": true,
+        "status": "SIGNIFICANT_DRIFT",
+        "ref_mean": 22.0,
+        "curr_mean": 10.91,
+        "ref_std": 21.19,
+        "curr_std": 9.73
+      },
+      "m4_q90": {
+        "ks_statistic": 0.4917,
+        "p_value": 0.0,
+        "psi": 3.24,
+        "wasserstein_distance": 63.4303,
+        "ks_drift_flag": true,
+        "psi_drift_flag": true,
+        "status": "SIGNIFICANT_DRIFT",
+        "ref_mean": 118.12,
+        "curr_mean": 54.69,
+        "ref_std": 79.4,
+        "curr_std": 37.75
+      },
+      "b2_q50": {
+        "ks_statistic": 0.4097,
+        "p_value": 0.0,
+        "psi": 3.2537,
+        "wasserstein_distance": 31.982,
+        "ks_drift_flag": true,
+        "psi_drift_flag": true,
+        "status": "SIGNIFICANT_DRIFT",
+        "ref_mean": 59.61,
+        "curr_mean": 27.92,
+        "ref_std": 52.02,
+        "curr_std": 23.73
+      }
+    }
+  },
+  "performance": {
+    "normal_batch": {
+      "coverage_80pct": 0.7667,
+      "mae_median": 40.4,
+      "pinball_loss_q10": 6.79,
+      "pinball_loss_q50": 20.2,
+      "pinball_loss_q90": 14.38,
+      "mean_pinball_loss": 13.79,
+      "coverage_alert": false,
+      "mae_alert": true
+    },
+    "induced_drift_batch": {
+      "coverage_80pct": 0.1375,
+      "mae_median": 185.38,
+      "pinball_loss_q10": 20.19,
+      "pinball_loss_q50": 92.69,
+      "pinball_loss_q90": 144.85,
+      "mean_pinball_loss": 85.91,
+      "coverage_alert": true,
+      "mae_alert": true
+    }
+  },
+  "governance_decision": {
+    "normal_batch": {
+      "rollback_triggered": false,
+      "active_model": "v2 (LightGBM M4 @production)"
+    },
+    "induced_drift_batch": {
+      "rollback_triggered": true,
+      "reason": "Coverage dropped below 70% and significant feature PSI > 0.20",
+      "recommended_action": "Revert @production alias to v1 (Baseline B2 Empirical)"
+    }
+  }
+}
