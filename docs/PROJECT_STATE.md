@@ -47,15 +47,24 @@
 
 - [x] Docker image for the API (`Dockerfile`, `requirements-serving.txt`, `scripts/docker_build.sh`, `docker-compose.yml`): exports the `production` model version from the registry into the image (`src/serving/export_model.py`); non-root, read-only filesystem, healthcheck. Tested locally with Colima: same answers as the local API, about 1.2 GB, ready in about 2 s. CI job `docker-image` builds and smoke-tests it with a synthetic model.
 
-## 4. In Progress / Next Steps
-- [ ] Configure DAGsHub remote credentials for remote DVC push and web MLflow sync.
-- [ ] Implement deterministic hydrology balance engine (`src/hydrology/`) for tank sizing and demand offset simulation.
-- [ ] Spatial leave-one-gauge-out cross-validation harness for KSNDMC micro-climate adjustments.
-- [ ] Download KSNDMC OpenCity data (hobli seasonal totals 2017–2024, AWS locations) and add a gauge-based adjustment on top of the IMD cell forecast in the service.
-- [ ] Rooftop harvest endpoint once runoff and first-flush parameters are cited.
-- [ ] Push the image to a container registry (GHCR or DAGsHub) and decide where it is deployed.
+## 4. Phase 3 Productionization (Person 2 Complete)
+- [x] **Task 3: Unified MLOps Streamlit Dashboard (`src/dashboard/app.py`)**: Built multi-tab production dashboard integrating:
+  1. Real-time Rainwater Harvesting yield calculator connected to FastAPI `/predict` endpoint (with automatic offline climatology fallback).
+  2. Model Performance Leaderboard & Champion Selection (comparing B1–B4 baselines vs M1–M5 LightGBM with quality gate threshold).
+  3. End-to-end MLOps pipeline visualization (DVC, Time-splits, Quality Gates, MLflow Registry, and Docker).
+  4. Continuous drift monitoring telemetry display (with automatic embedding for Person 1's report).
+- [x] **Task 4: Project Governance & Compliance Framework (`docs/model_governance.md`)**: Formalized full governance framework:
+  1. Automated promotion gates (`MAE < 35 mm`, `Coverage >= 75%`, bootstrap superiority).
+  2. Model Card & Git/DVC data provenance at `/model`.
+  3. Decoupling of BWSSB municipal rainwater harvesting bylaws (`config/regulations.yaml`).
+  4. Docker security & non-root principle of least privilege.
 
-## 5. Open Questions / Blockers
+## 5. In Progress / Next Steps
+- **Person 1**: Implement Data/Model Drift injection and KS-Test/PSI script (`src/monitoring/drift_detector.py`) and demonstrate MLflow Model Versioning rollback.
+- Configure DAGsHub remote credentials for remote DVC push and web MLflow sync.
+- Spatial leave-one-gauge-out cross-validation harness for KSNDMC micro-climate adjustments.
+
+## 6. Open Questions / Blockers
 - `departure_pct_lag1m` (used by B4) uses monthly normals from all of 1901–2025, including test years: a small look-ahead leak. The main model uses past-only anomalies instead.
 - Licences for the NOAA PSL Niño 3.4 (ERSST v6) and DMI (HadISST1.1) files are not yet verified.
 - Climate-index data is tracked with DVC locally but not pushed (DAGsHub credentials needed).
