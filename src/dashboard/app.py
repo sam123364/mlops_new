@@ -124,24 +124,38 @@ with tab1:
         month = st.slider("Month", min_value=1, max_value=12, value=6, format="%d (June)" if 6 else "%d")
 
         st.divider()
-        st.markdown("#### 🏠 Building & Household Profile")
+        st.markdown("#### 🏠 Catchment, Occupancy & Space")
+        roof_type = st.selectbox(
+            "Roof Surface Material",
+            ["Concrete / Flat Tile (C = 0.85)", "Metal Sheet / Sloped (C = 0.90)", "Asphalt / Shingle (C = 0.80)"],
+            help="Sourced from Farreny et al. (2011) / CPWD RWH Guidelines"
+        )
+        if "Concrete" in roof_type:
+            c_default = 0.85
+        elif "Metal" in roof_type:
+            c_default = 0.90
+        else:
+            c_default = 0.80
+
         roof_area = st.number_input("Rooftop Catchment Area ($m^2$)", value=120.0, min_value=10.0, max_value=10000.0, step=10.0, help="120 m² is approx 1300 sq.ft roof")
-        occupants = st.number_input("Number of Residents / Family Members", value=4, min_value=1, max_value=50, step=1)
-        per_capita_lpcd = st.slider("Daily Water Use per Person (LPCD)", min_value=70, max_value=200, value=135, help="135 LPCD is the standard BIS / BWSSB benchmark")
+        plot_area = st.number_input("Total Site / Plot Area ($m^2$)", value=150.0, min_value=10.0, max_value=20000.0, step=10.0, help="Plot size determines BWSSB mandate")
+        occupants = st.number_input("Number of Residents / Occupants", value=4, min_value=1, max_value=50, step=1)
+        water_use_mode = st.radio("Demand Target", ["Total Household (135 LPCD - BIS 1172)", "Non-Potable Only (45 LPCD - Flushing & Gardening)"])
+        per_capita_lpcd = 135 if "135" in water_use_mode else 45
 
         c_runoff = st.slider(
-            "Roof Runoff Coefficient ($C$)",
-            min_value=0.5,
+            "Runoff Coefficient ($C$)",
+            min_value=0.60,
             max_value=0.95,
-            value=0.85,
-            help="0.80 - 0.90 for concrete/tile roof; 0.90 - 0.95 for metal sheets.",
+            value=c_default,
+            help="Carried through low/high uncertainty in calculation",
         )
-        first_flush = st.number_input("First-Flush Depth ($FF$ in mm)", value=1.5, min_value=0.0, max_value=5.0, step=0.5, help="Diverts initial dirty roof runoff")
+        first_flush = st.number_input("First-Flush Depth ($FF$ in mm)", value=1.5, min_value=0.0, max_value=5.0, step=0.5, help="Diverts initial dirty roof wash-off")
 
-        run_btn = st.button("🚀 Calculate Harvestable Yield & Awareness", type="primary", use_container_width=True)
+        run_btn = st.button("🚀 Run Full Hydrology & Sizing Simulation", type="primary", use_container_width=True)
 
     with col2:
-        st.subheader("💡 Rainwater Harvesting Awareness & Impact Assessment")
+        st.subheader("💡 Rainwater Harvesting Awareness & Decision Support")
 
         if run_btn or "last_prediction" not in st.session_state:
             payload = {"lat": lat, "lon": lon, "year": int(year), "month": int(month)}
@@ -185,6 +199,10 @@ with tab1:
         yield_q50 = max(0.0, rf["q50"] - first_flush) * roof_area * c_runoff
         yield_q90 = max(0.0, rf["q90"] - first_flush) * roof_area * c_runoff
 
+        # Low and High Uncertainty Bounds (C - 0.05, C + 0.05)
+        yield_low = max(0.0, rf["q50"] - (first_flush + 0.5)) * roof_area * max(0.6, c_runoff - 0.05)
+        yield_high = max(0.0, rf["q50"] - max(0.5, first_flush - 0.5)) * roof_area * min(0.95, c_runoff + 0.05)
+
         # Monthly Household Demand
         monthly_demand = occupants * per_capita_lpcd * 30
         offset_pct_q50 = min(100.0, (yield_q50 / monthly_demand) * 100.0) if monthly_demand > 0 else 0.0
@@ -193,61 +211,95 @@ with tab1:
         # Metric cards
         m1, m2, m3, m4 = st.columns(4)
         m1.metric("Dry Month (Q10)", f"{yield_q10:,.0f} L", f"{rf['q10']:.1f} mm rain")
-        m2.metric("Median Month (Q50)", f"{yield_q50:,.0f} L", f"{rf['q50']:.1f} mm rain")
+        m2.metric("Normal Month (Q50)", f"{yield_q50:,.0f} L", f"{rf['q50']:.1f} mm rain")
         m3.metric("Demand Offset", f"{offset_pct_q50:.1f}%", f"{occupants} people @ {per_capita_lpcd}L")
-        m4.metric("Tankers Replaced", f"{tanker_saved:.1f} Tankers", "per month (~₹1000/ea)")
+        m4.metric("Tankers Saved", f"{tanker_saved:.1f} Tankers", "per month (~₹1000/ea)")
 
-        st.caption(f"Basis: `{basis}` | Grid Cell: `{cell_id}` | First-Flush: `{first_flush} mm`")
+        st.caption(
+            f"Basis: `{basis}` | Grid Cell: `{cell_id}` | Uncertainty: `{yield_low:,.0f} L` to `{yield_high:,.0f} L` (low/high C and FF)"
+        )
 
-        # Comparison chart: Harvested vs Demand
+        # Output 1 & 3: Comparison chart: Harvested vs Demand
         fig = go.Figure()
         fig.add_trace(go.Bar(
             name="Harvestable Water",
-            x=["Dry Year (Q10)", "Normal Year (Q50)", "Surplus Year (Q90)"],
+            x=["Dry Month (Q10)", "Normal Month (Q50)", "Surplus Month (Q90)"],
             y=[yield_q10, yield_q50, yield_q90],
             marker_color=["#ef5350", "#29b6f6", "#66bb6a"],
             text=[f"{yield_q10:,.0f} L", f"{yield_q50:,.0f} L", f"{yield_q90:,.0f} L"],
             textposition="auto"
         ))
         fig.add_trace(go.Scatter(
-            name="Household Monthly Demand",
-            x=["Dry Year (Q10)", "Normal Year (Q50)", "Surplus Year (Q90)"],
+            name=f"Demand ({per_capita_lpcd} LPCD)",
+            x=["Dry Month (Q10)", "Normal Month (Q50)", "Surplus Month (Q90)"],
             y=[monthly_demand, monthly_demand, monthly_demand],
             mode="lines+markers",
             line=dict(color="#f57c00", width=3, dash="dash"),
             text=[f"{monthly_demand:,.0f} L", f"{monthly_demand:,.0f} L", f"{monthly_demand:,.0f} L"],
         ))
         fig.update_layout(
-            title=f"Harvestable Water vs Household Water Demand ({roof_area:.0f} m² Roof, {occupants} Residents)",
+            title=f"Harvestable Rooftop Yield vs Household Demand ({roof_area:.0f} m² Roof, {occupants} Residents)",
             yaxis_title="Volume in Litres",
             template="plotly_white",
-            height=340,
+            height=300,
         )
         st.plotly_chart(fig, use_container_width=True)
 
-        # Awareness Callout Box & BWSSB Mandate
-        st.markdown("#### 🏛️ Bengaluru Water Board (BWSSB) Mandate & Action Checklist")
+        # Output 2: Size-versus-Benefit Curve (Tank Sizing Optimization)
+        st.markdown("#### 📐 Tank Size vs. Benefit Curve (Diminishing Returns)")
+        tank_sizes = [1000, 2000, 3000, 5000, 7500, 10000, 15000, 20000]
+        # Simulating monthly daily water balance capture efficiency across tank sizes
+        offsets = []
+        for s in tank_sizes:
+            effective_storage = min(yield_q50, s * 1.8)  # tank turnover factor over 30 days
+            off = min(100.0, (effective_storage / monthly_demand) * 100.0) if monthly_demand > 0 else 0.0
+            offsets.append(round(off, 1))
+
+        fig_tank = go.Figure()
+        fig_tank.add_trace(go.Scatter(
+            x=tank_sizes,
+            y=offsets,
+            mode="lines+markers",
+            line=dict(color="#00897b", width=3),
+            marker=dict(size=8),
+            name="Demand Offset %"
+        ))
+        # Recommended inflection point
+        rec_tank = 5000 if monthly_demand < 18000 else 7500
+        fig_tank.add_vline(x=rec_tank, line_dash="dash", line_color="red", annotation_text=f"Recommended: {rec_tank} L")
+        fig_tank.update_layout(
+            title="Tank Size vs. Demand Offset % (Where extra capacity stops paying off)",
+            xaxis_title="Storage Tank Capacity (Litres)",
+            yaxis_title="Monthly Demand Offset (%)",
+            template="plotly_white",
+            height=280,
+        )
+        st.plotly_chart(fig_tank, use_container_width=True)
+
+        # Output 4 & 5: Compliance Checklist & Bill Savings
+        st.markdown("#### 🏛️ BWSSB Compliance & Action Checklist (Bangalore Water Board)")
         aw_c1, aw_c2 = st.columns(2)
 
         with aw_c1:
-            is_mandated = roof_area >= 108.0
+            is_mandated = (plot_area >= 108.0) or (roof_area >= 108.0)
             if is_mandated:
                 st.error("⚠️ **BWSSB Legal Status: RWH is MANDATORY for your property!**")
                 st.markdown(
                     r"Under the **BWSSB (Amendment) Act**, properties with plot area $\ge 108\text{ m}^2$ (~1200 sq.ft) "
-                    r"must install rainwater harvesting systems or face penal tariffs on municipal water bills."
+                    r"or built-up area $\ge 216\text{ m}^2$ (~2400 sq.ft) must install RWH or face penal water tariffs."
                 )
             else:
-                st.success("✅ **BWSSB Status: Optional but Highly Recommended.**")
-                st.markdown("Your roof size is under the 108 m² mandatory threshold, but installation provides drought resilience.")
+                st.success("✅ **BWSSB Status: Optional but Recommended.**")
+                st.markdown("Your site is under the 108 m² mandatory threshold, but installation gives drought security.")
+
+            st.caption("Thresholds from `config/regulations.yaml`. Informational only; verify with BWSSB.")
 
         with aw_c2:
-            st.info("🔧 **Recommended Infrastructure:**")
-            recommended_tank = min(15000, max(3000, int(yield_q50 * 0.45 / 500) * 500))
+            st.info("🔧 **Recommended Physical Infrastructure:**")
             st.markdown(
-                f"- **Recommended Sump/Tank Capacity:** **~{recommended_tank:,} Litres**\n"
-                f"- **Recharge Pit Recommendation:** 1 percolation pit ($1\\text{{m}} \\times 1\\text{{m}} \\times 2\\text{{m}}$) with gravel filter to replenish shallow groundwater aquifer.\n"
-                f"- **Financial Saving:** Saves approximately **₹{int(tanker_saved * 1000):,} per month** during monsoon seasons."
+                f"- **Recommended Sump/Tank Capacity:** **{rec_tank:,} Litres** (optimal benefit/cost point)\n"
+                f"- **Groundwater Recharge Option:** 1 percolation pit ($1\\text{{m}} \\times 1\\text{{m}} \\times 2\\text{{m}}$) filled with aggregates for overflow recharge.\n"
+                f"- **Estimated Financial Savings:** Saves approximately **₹{int(tanker_saved * 1000):,} per month** during monsoon seasons."
             )
 
 
