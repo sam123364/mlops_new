@@ -124,20 +124,24 @@ with tab1:
         month = st.slider("Month", min_value=1, max_value=12, value=6, format="%d (June)" if 6 else "%d")
 
         st.divider()
-        roof_area = st.number_input("Rooftop Catchment Area ($m^2$)", value=120.0, min_value=10.0, max_value=10000.0, step=10.0)
+        st.markdown("#### 🏠 Building & Household Profile")
+        roof_area = st.number_input("Rooftop Catchment Area ($m^2$)", value=120.0, min_value=10.0, max_value=10000.0, step=10.0, help="120 m² is approx 1300 sq.ft roof")
+        occupants = st.number_input("Number of Residents / Family Members", value=4, min_value=1, max_value=50, step=1)
+        per_capita_lpcd = st.slider("Daily Water Use per Person (LPCD)", min_value=70, max_value=200, value=135, help="135 LPCD is the standard BIS / BWSSB benchmark")
+
         c_runoff = st.slider(
-            "Runoff Coefficient ($C$)",
+            "Roof Runoff Coefficient ($C$)",
             min_value=0.5,
             max_value=0.95,
             value=0.85,
             help="0.80 - 0.90 for concrete/tile roof; 0.90 - 0.95 for metal sheets.",
         )
-        first_flush = st.number_input("First-Flush Depth ($FF$ in mm)", value=1.5, min_value=0.0, max_value=5.0, step=0.5)
+        first_flush = st.number_input("First-Flush Depth ($FF$ in mm)", value=1.5, min_value=0.0, max_value=5.0, step=0.5, help="Diverts initial dirty roof runoff")
 
-        run_btn = st.button("🚀 Calculate Harvestable Yield", type="primary", use_container_width=True)
+        run_btn = st.button("🚀 Calculate Harvestable Yield & Awareness", type="primary", use_container_width=True)
 
     with col2:
-        st.subheader("📈 Prediction & Hydrology Breakdown")
+        st.subheader("💡 Rainwater Harvesting Awareness & Impact Assessment")
 
         if run_btn or "last_prediction" not in st.session_state:
             payload = {"lat": lat, "lon": lon, "year": int(year), "month": int(month)}
@@ -157,8 +161,6 @@ with tab1:
                     st.warning(f"FastAPI call timed out, falling back to local climatology: {e}")
 
             if res_data is None:
-                # Standalone fallback estimation based on Bengaluru monthly climatology
-                # Average climatological monthly profile (mm)
                 clim_medians = {1: 3.5, 2: 7.2, 3: 15.8, 4: 42.1, 5: 112.5, 6: 94.2, 7: 120.4, 8: 145.8, 9: 195.4, 10: 165.2, 11: 62.4, 12: 15.6}
                 q50 = clim_medians.get(int(month), 50.0)
                 q10 = round(q50 * 0.42, 2)
@@ -183,37 +185,70 @@ with tab1:
         yield_q50 = max(0.0, rf["q50"] - first_flush) * roof_area * c_runoff
         yield_q90 = max(0.0, rf["q90"] - first_flush) * roof_area * c_runoff
 
-        m1, m2, m3 = st.columns(3)
+        # Monthly Household Demand
+        monthly_demand = occupants * per_capita_lpcd * 30
+        offset_pct_q50 = min(100.0, (yield_q50 / monthly_demand) * 100.0) if monthly_demand > 0 else 0.0
+        tanker_saved = yield_q50 / 6000.0  # standard 6000L tanker
+
+        # Metric cards
+        m1, m2, m3, m4 = st.columns(4)
         m1.metric("Dry Month (Q10)", f"{yield_q10:,.0f} L", f"{rf['q10']:.1f} mm rain")
         m2.metric("Median Month (Q50)", f"{yield_q50:,.0f} L", f"{rf['q50']:.1f} mm rain")
-        m3.metric("Wet Month (Q90)", f"{yield_q90:,.0f} L", f"{rf['q90']:.1f} mm rain")
+        m3.metric("Demand Offset", f"{offset_pct_q50:.1f}%", f"{occupants} people @ {per_capita_lpcd}L")
+        m4.metric("Tankers Replaced", f"{tanker_saved:.1f} Tankers", "per month (~₹1000/ea)")
 
-        st.caption(f"Basis: `{basis}` | Grid Cell: `{cell_id}` | First-Flush deduction: `{first_flush} mm`")
+        st.caption(f"Basis: `{basis}` | Grid Cell: `{cell_id}` | First-Flush: `{first_flush} mm`")
 
-        # Plotly Bar Chart
+        # Comparison chart: Harvested vs Demand
         fig = go.Figure()
-        fig.add_trace(
-            go.Bar(
-                x=["Dry Scenario (Q10)", "Expected Scenario (Q50)", "Surplus Scenario (Q90)"],
-                y=[yield_q10, yield_q50, yield_q90],
-                marker_color=["#ef5350", "#29b6f6", "#66bb6a"],
-                text=[f"{yield_q10:,.0f} L", f"{yield_q50:,.0f} L", f"{yield_q90:,.0f} L"],
-                textposition="auto",
-            )
-        )
+        fig.add_trace(go.Bar(
+            name="Harvestable Water",
+            x=["Dry Year (Q10)", "Normal Year (Q50)", "Surplus Year (Q90)"],
+            y=[yield_q10, yield_q50, yield_q90],
+            marker_color=["#ef5350", "#29b6f6", "#66bb6a"],
+            text=[f"{yield_q10:,.0f} L", f"{yield_q50:,.0f} L", f"{yield_q90:,.0f} L"],
+            textposition="auto"
+        ))
+        fig.add_trace(go.Scatter(
+            name="Household Monthly Demand",
+            x=["Dry Year (Q10)", "Normal Year (Q50)", "Surplus Year (Q90)"],
+            y=[monthly_demand, monthly_demand, monthly_demand],
+            mode="lines+markers",
+            line=dict(color="#f57c00", width=3, dash="dash"),
+            text=[f"{monthly_demand:,.0f} L", f"{monthly_demand:,.0f} L", f"{monthly_demand:,.0f} L"],
+        ))
         fig.update_layout(
-            title=f"Monthly Harvestable Rooftop Water Yield ({roof_area} m² roof)",
-            yaxis_title="Harvestable Water (Litres)",
+            title=f"Harvestable Water vs Household Water Demand ({roof_area:.0f} m² Roof, {occupants} Residents)",
+            yaxis_title="Volume in Litres",
             template="plotly_white",
-            height=350,
+            height=340,
         )
         st.plotly_chart(fig, use_container_width=True)
 
-        st.info(
-            "💡 **Hydrology Note:** $1\\text{ mm}$ rain on $1\\text{ m}^2$ roof = $1\\text{ Litre}$. "
-            f"With $C = {c_runoff}$ and first flush $FF = {first_flush}\\text{ mm}$, "
-            f"your {roof_area} $m^2$ roof captures approximately **{yield_q50:,.0f} Litres** in an average month."
-        )
+        # Awareness Callout Box & BWSSB Mandate
+        st.markdown("#### 🏛️ Bengaluru Water Board (BWSSB) Mandate & Action Checklist")
+        aw_c1, aw_c2 = st.columns(2)
+
+        with aw_c1:
+            is_mandated = roof_area >= 108.0
+            if is_mandated:
+                st.error("⚠️ **BWSSB Legal Status: RWH is MANDATORY for your property!**")
+                st.markdown(
+                    r"Under the **BWSSB (Amendment) Act**, properties with plot area $\ge 108\text{ m}^2$ (~1200 sq.ft) "
+                    r"must install rainwater harvesting systems or face penal tariffs on municipal water bills."
+                )
+            else:
+                st.success("✅ **BWSSB Status: Optional but Highly Recommended.**")
+                st.markdown("Your roof size is under the 108 m² mandatory threshold, but installation provides drought resilience.")
+
+        with aw_c2:
+            st.info("🔧 **Recommended Infrastructure:**")
+            recommended_tank = min(15000, max(3000, int(yield_q50 * 0.45 / 500) * 500))
+            st.markdown(
+                f"- **Recommended Sump/Tank Capacity:** **~{recommended_tank:,} Litres**\n"
+                f"- **Recharge Pit Recommendation:** 1 percolation pit ($1\\text{{m}} \\times 1\\text{{m}} \\times 2\\text{{m}}$) with gravel filter to replenish shallow groundwater aquifer.\n"
+                f"- **Financial Saving:** Saves approximately **₹{int(tanker_saved * 1000):,} per month** during monsoon seasons."
+            )
 
 
 # ==============================================================================
